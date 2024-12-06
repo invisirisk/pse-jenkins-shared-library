@@ -34,8 +34,18 @@ class CertificateGenerator {
 
         // If you need to use these variables in npm, you can add:
         script.sh """
-            npm config set cafile ${caFile}
+            #npm config set cafile ${caFile}
             npm config set strict-ssl false
+            if command -v pip >/dev/null 2>&1; then
+                pip config --global set global.cert /etc/ssl/certs/pse.pem
+                echo "pip configured to use custom certificate."
+            fi
+            # Configure npm
+            if command -v npm >/dev/null 2>&1; then
+                npm config set cafile /etc/ssl/certs/pse.pem
+                npm config set strict-ssl false
+                echo "npm configured to use custom certificate."
+            fi
         """
     }
 }
